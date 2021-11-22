@@ -6,29 +6,38 @@ import {
   ScrollView,
   Image,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
+
+import {useNavigation} from '@react-navigation/native';
 
 import colors from '../../constants/colors';
 import {Height, Width} from '../../constants/dimension';
 import {FONT_SIZE_SMALL} from '../../constants/fontsize';
 
 const suggestedtopics = props => {
+  const navigation = useNavigation();
   const suggestedtopic = [];
+  // console.log('suggestedtopics props in its component', props.props);
   suggestedtopic.push(props.props);
-  //   console.log('suggestedtopics const', suggestedtopic);
+  // console.log('suggestedtopics const', suggestedtopic);
   const topics = suggestedtopic[0];
+  console.log('topics const', topics);
 
   return (
     <View style={[styles.row, {flexWrap: 'wrap', marginVertical: 8}]}>
       {topics.map((item, index) => {
         return (
-          <View
+          <TouchableOpacity
             style={{
               padding: 2,
               marginTop: 4,
               borderRadius: 8,
+            }}
+            onPress={() => {
+              navigation.navigate('Feed', item);
             }}>
             <ImageBackground
               source={{uri: item.image_url}}
@@ -44,10 +53,13 @@ const suggestedtopics = props => {
                 style={styles.linearGradient}>
                 <Text style={styles.buttonText}>{item.label}</Text>
               </LinearGradient>
+              <Text>{item.tag}</Text>
             </ImageBackground>
-          </View>
+          </TouchableOpacity>
         );
       })}
+
+      <Text style={{color: colors.BLACK}}>{'Suggested topics icon'}</Text>
     </View>
   );
 };

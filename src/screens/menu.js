@@ -6,6 +6,7 @@ import {
   ScrollView,
   Image,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import {State} from 'react-native-gesture-handler';
 
@@ -13,7 +14,7 @@ import {connect} from 'react-redux';
 
 import {useSelector, useDispatch} from 'react-redux';
 
-import {fetchSuggestedTopics} from '../reducer/news';
+import {fetchTrendingTopics} from '../reducer/news';
 
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -32,19 +33,20 @@ import categories from '../constants/constants';
 import {Height, Width} from '../constants/dimension';
 
 import SuggestedTopicsComponent from './menucomponents/suggestedtopics';
+import suggestedtopics from './menucomponents/suggestedtopics';
 
 const home = props => {
-  const {suggestedTopics} = useSelector(state => {
-    console.log('state of suggested topics', state);
-    return {suggestedTopics: state.news.suggestedTopics};
+  const {trendingTopics} = useSelector(state => {
+    console.log('state of trending topics', state);
+    return {trendingTopics: state.news.trendingTopics};
   });
   const dispatch = useDispatch();
-  console.log(suggestedTopics);
+  console.log('trending topics props in menu', trendingTopics);
   useEffect(() => {
-    dispatch(fetchSuggestedTopics());
+    dispatch(fetchTrendingTopics());
   }, []);
 
-  console.log(props);
+  // console.log('menu props', props);
   // console.log(TrendingTopics);
   return (
     <View style={{flex: 1, padding: 12, backgroundColor: colors.WHITE}}>
@@ -65,9 +67,13 @@ const home = props => {
       <ScrollView>
         <View>
           <ScrollView horizontal={true} style={{marginVertical: 32}}>
+            {/* Stories */}
             {categories.map((item, index) => {
               return (
-                <View
+                <TouchableOpacity
+                  onPress={() => {
+                    props.navigation.navigate('Feed', item);
+                  }}
                   style={{
                     marginHorizontal: 20,
                     alignItems: 'center',
@@ -86,7 +92,7 @@ const home = props => {
                     }}>
                     {item.title}
                   </Text>
-                </View>
+                </TouchableOpacity>
               );
             })}
             {/* </View> */}
@@ -102,7 +108,46 @@ const home = props => {
             {'SUGGESTED TOPICS'}
           </Text>
 
-          <SuggestedTopicsComponent props={suggestedTopics} />
+          {/* <SuggestedTopicsComponent props={suggestedTopics} /> */}
+
+          <View style={[styles.row, {flexWrap: 'wrap', marginVertical: 8}]}>
+            {
+              // !!suggestedTopics &&
+
+              trendingTopics?.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    style={{
+                      padding: 2,
+                      marginTop: 4,
+                      borderRadius: 8,
+                    }}
+                    onPress={() => {
+                      props.navigation.navigate('Feed', item);
+                    }}>
+                    <ImageBackground
+                      source={{uri: item.image_url}}
+                      style={{
+                        height: Height / 6,
+                        width: Width / 3.4,
+                      }}
+                      imageStyle={{
+                        borderRadius: 4,
+                      }}>
+                      <LinearGradient
+                        colors={['#00000000', '#00000000', '#FFFFFF']}
+                        style={styles.linearGradient}>
+                        <Text style={styles.buttonText}>{item.label}</Text>
+                      </LinearGradient>
+                      {/* <Text>{item.tag}</Text> */}
+                    </ImageBackground>
+                  </TouchableOpacity>
+                );
+              })
+            }
+
+            <Text style={{color: colors.BLACK}}>{'Suggested topics icon'}</Text>
+          </View>
         </View>
       </ScrollView>
     </View>

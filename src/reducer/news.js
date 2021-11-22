@@ -2,32 +2,45 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
 import apiclient from '../apiclient';
 
-export const fetchCategoryTopics = createAsyncThunk(
-  'fetchCategoryTopics',
+export const fetchStories = createAsyncThunk(
+  'fetchStories',
   async (userId, thunkAPI) => {
-    const categoryTopicsResponse = await apiclient.get(
-      'news?category=top_stories&max_limit=10&include_card_data=true',
+    console.log('userID', userId);
+    const storiesResponse = await apiclient.get(
+      `news?category=${userId}&max_limit=10&include_card_data=true`,
     );
-    console.log('categoryTopicsResponse', categoryTopicsResponse);
-    return categoryTopicsResponse.data;
+    console.log('storiesResponse', storiesResponse);
+    return storiesResponse.data;
   },
 );
 
-export const fetchSuggestedTopics = createAsyncThunk(
-  'fetchSuggestedTopics',
+export const fetchTrendingTopics = createAsyncThunk(
+  'fetchTrendingTopics',
   async (userId, thunkAPI) => {
-    const suggestedTopicsResponse = await apiclient.get(
+    const trendingTopicsResponse = await apiclient.get(
       'search/trending_topics',
     );
-    console.log(suggestedTopicsResponse);
-    return suggestedTopicsResponse.data;
+    console.log('trendingTopicsResponse', trendingTopicsResponse);
+    return trendingTopicsResponse.data;
+  },
+);
+export const fetchTrendingTopicsFeed = createAsyncThunk(
+  'fetchTrendingTopicsFeed',
+  async (userId, thunkAPI) => {
+    const trendingTopicsFeedResponse = await apiclient.get(
+      'search/trending_topics/T20_World_Cup?page=1&type=CUSTOM_CATEGORY',
+    );
+    console.log('trendingTopicsFeedResponse,', trendingTopicsFeedResponse);
+    return trendingTopicsFeedResponse;
   },
 );
 
 const initialState = {
   // trendingTopics: [],
-  suggestedTopics: [],
-  categoryTopics: [],
+  stories: null,
+  trendingTopics: null,
+  trendingTopicsFeed: null,
+  // showAuthorName: false,
 };
 
 export const newsslice = createSlice({
@@ -35,15 +48,18 @@ export const newsslice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
-    builder.addCase(fetchCategoryTopics.fulfilled, (state, action) => {
+    builder.addCase(fetchStories.fulfilled, (state, action) => {
       console.log(' category topics action', action);
-      state.categoryTopics = action.payload.news_list;
+      state.stories = action.payload.news_list;
     });
-  },
-  extraReducers: builder => {
-    builder.addCase(fetchSuggestedTopics.fulfilled, (state, action) => {
+
+    builder.addCase(fetchTrendingTopics.fulfilled, (state, action) => {
       console.log(action);
-      state.suggestedTopics = action.payload.trending_tags;
+      state.trendingTopics = action.payload.trending_tags;
+    });
+    builder.addCase(fetchTrendingTopicsFeed.fulfilled, (state, action) => {
+      console.log(action);
+      state.trendingTopicsFeed = action.payload.data.news_list;
     });
   },
 });
