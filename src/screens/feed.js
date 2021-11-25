@@ -1,6 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  Alert,
+} from 'react-native';
 import {State} from 'react-native-gesture-handler';
+
+import Story from './feedcomponent/story';
+import LinearGradient from 'react-native-linear-gradient';
 
 import Carousel from 'react-native-snap-carousel';
 
@@ -13,137 +24,82 @@ import {
   FONT_SIZE_LARGE,
   FONT_SIZE_MEDIUM,
   FONT_SIZE_NORMAL,
+  FONT_SIZE_SMALL,
 } from '../constants/fontsize';
 
 import {
   fetchStories,
+  setSelectedCategory,
   fetchSuggestedTopics,
   fetchTrendingTopicsFeed,
+  setShowAuthorName,
 } from '../reducer/news';
 
 const home = props => {
   // const {trendingTopics} = useSelector(state => {
   //   return {trendingTopics: state.news.suggestedTopics};
   // });
+  const sliderHeight = Dimensions.get('window').height;
+  const itemHeight = Dimensions.get('window').height;
 
-  const [showAuthorName, setshowAuthorName] = useState(false);
-  var category = null;
-
-  console.log('feeds screens props', props);
-  if (props.route.params) {
-    category = props.route.params.category;
-    console.log('If statementn occurs', category);
-  } else {
-    console.log('else statementn occurs');
-    category = 'top_stories';
-  }
+  var news_offset = null;
 
   //state
-  const {stories} = useSelector(state => {
-    console.log('stories', state);
-    return {stories: state.news.stories};
+  const {stories, selectedCategory} = useSelector(state => {
+    return {
+      stories: state.news.stories,
+      selectedCategory: state.news.selectedCategory,
+    };
   });
-  // console.log(categoryfeeds);
-  // var {showAuthorName} = useSelector(state => {
-  //   console.log('stories', state);
-  //   return {showAuthorName: state.news.showAuthorName};
-  // });
+
+  if (stories && stories.length > 0) {
+    news_offset = stories[stories.length - 1].hash_id;
+  }
 
   const trendingTopicsFeed = useSelector(state => {
-    console.log('state of trendingTopicsFeed', state.news.trendingTopicsFeed);
     return state.news.trendingTopicsFeed;
   });
 
   const dispatch = useDispatch();
-  // console.log('trending topics state', trendingTopics);
 
   useEffect(() => {
-    dispatch(fetchStories(category));
+    dispatch(fetchStories({selectedCategory}));
+
     // dispatch(fetchTrendingTopicsFeed());
   }, []);
+
+  const onEndReached = () => {
+    alert('onendreached props');
+    dispatch(fetchStories({selectedCategory, news_offset}));
+
+    // var offset = props[props.length - 1].hash_id
+    // var offSet = props[]
+    // return offSet;
+  };
 
   const renderItem = item => {
     const data = item.item.news_obj;
 
-    return (
-      <View style={styles.container}>
-        <Image
-          source={{uri: data.image_url}}
-          style={{height: Height / 2.6, width: Width}}
-        />
-        <View style={styles.contentView}>
-          <Text style={{color: colors.BLACK, fontSize: FONT_SIZE_LARGE}}>
-            {data.title}
-          </Text>
-          <Text
-            style={{
-              // color: '#909090',
-              color: colors.GREY,
-              fontSize: FONT_SIZE_LARGE,
-              fontWeight: '300',
-              marginTop: 8,
-              lineHeight: 26,
-            }}>
-            {data.content}
-          </Text>
-          {showAuthorName ? (
-            <Text
-              onPress={() => {
-                props.navigation.navigate('WebView', data.source_url);
-                setshowAuthorName(!showAuthorName);
-              }}
-              style={{
-                color: '#909090',
-                fontSize: FONT_SIZE_NORMAL,
-                fontWeight: '400',
-                marginTop: 8,
-                lineHeight: 26,
-              }}>
-              {`tap for more at `}
-              <Text
-                style={{
-                  color: colors.LIGHT_BLUE,
-                  fontWeight: '500',
-                }}>
-                {data.source_name}
-              </Text>
-              {' / today'}
-            </Text>
-          ) : (
-            <Text
-              onPress={() => {
-                props.navigation.navigate('WebView', data.source_url);
-                setshowAuthorName(!showAuthorName);
-              }}
-              style={{
-                color: '#909090',
-                fontSize: FONT_SIZE_NORMAL,
-                fontWeight: '400',
-                marginTop: 8,
-                lineHeight: 26,
-              }}>
-              {`shot by ${data.author_name}`}
-            </Text>
-          )}
-        </View>
-      </View>
-    );
+    // return null;
+    return <Story key={String(item.index)} data={data} index={item.index} />;
   };
 
   return (
     <View
     // style={{ justifyContent: 'center' }}
     >
-      {/* <Text style={{color: '#000000'}}>{'This is feed screen'}</Text> */}
       <Carousel
         data={stories}
         renderItem={renderItem}
         sliderWidth={Width}
         itemWidth={Width}
-        sliderHeight={Height}
-        itemHeight={Height}
+        sliderHeight={sliderHeight}
+        itemHeight={itemHeight}
         vertical={true}
-        activeSlideOffset={10}
+        onEndReached={onEndReached}
+        inactiveSlideOpacity={1}
+        inactiveSlideScale={1}
+        windowSize={5}
       />
     </View>
   );
@@ -153,7 +109,6 @@ export default home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.WHITE,
   },
   contentView: {
     padding: 12,

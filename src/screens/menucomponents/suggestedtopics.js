@@ -20,46 +20,45 @@ import {FONT_SIZE_SMALL} from '../../constants/fontsize';
 const suggestedtopics = props => {
   const navigation = useNavigation();
   const suggestedtopic = [];
-  // console.log('suggestedtopics props in its component', props.props);
   suggestedtopic.push(props.props);
-  // console.log('suggestedtopics const', suggestedtopic);
   const topics = suggestedtopic[0];
-  console.log('topics const', topics);
 
   return (
     <View style={[styles.row, {flexWrap: 'wrap', marginVertical: 8}]}>
-      {topics.map((item, index) => {
-        return (
-          <TouchableOpacity
-            style={{
-              padding: 2,
-              marginTop: 4,
-              borderRadius: 8,
-            }}
-            onPress={() => {
-              navigation.navigate('Feed', item);
-            }}>
-            <ImageBackground
-              source={{uri: item.image_url}}
-              style={{
-                height: Height / 6,
-                width: Width / 3.4,
-              }}
-              imageStyle={{
-                borderRadius: 4,
-              }}>
-              <LinearGradient
-                colors={['#00000000', '#00000000', '#FFFFFF']}
-                style={styles.linearGradient}>
-                <Text style={styles.buttonText}>{item.label}</Text>
-              </LinearGradient>
-              <Text>{item.tag}</Text>
-            </ImageBackground>
-          </TouchableOpacity>
-        );
-      })}
+      {
+        // !!suggestedTopics &&
 
-      <Text style={{color: colors.BLACK}}>{'Suggested topics icon'}</Text>
+        topics?.map((item, index) => {
+          return (
+            <TouchableOpacity
+              style={{
+                padding: 2,
+                marginTop: 4,
+                borderRadius: 8,
+              }}
+              onPress={() => {
+                navigation.navigate('Feed', item);
+              }}>
+              <ImageBackground
+                source={{uri: item.image_url}}
+                style={{
+                  height: Height / 6,
+                  width: Width / 3.4,
+                }}
+                imageStyle={{
+                  borderRadius: 4,
+                }}>
+                <LinearGradient
+                  colors={['#00000000', '#00000000', '#FFFFFF']}
+                  style={styles.linearGradient}>
+                  <Text style={styles.buttonText}>{item.label}</Text>
+                </LinearGradient>
+                {/* <Text>{item.tag}</Text> */}
+              </ImageBackground>
+            </TouchableOpacity>
+          );
+        })
+      }
     </View>
   );
 };

@@ -14,7 +14,7 @@ import {connect} from 'react-redux';
 
 import {useSelector, useDispatch} from 'react-redux';
 
-import {fetchTrendingTopics} from '../reducer/news';
+import {fetchTrendingTopics, setSelectedCategory} from '../reducer/news';
 
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -30,24 +30,25 @@ import {
 } from '../constants/fontsize';
 import categories from '../constants/constants';
 
+import {fetchStories, clearStories} from '../reducer/news';
+
 import {Height, Width} from '../constants/dimension';
 
 import SuggestedTopicsComponent from './menucomponents/suggestedtopics';
 import suggestedtopics from './menucomponents/suggestedtopics';
 
 const home = props => {
-  const {trendingTopics} = useSelector(state => {
-    console.log('state of trending topics', state);
-    return {trendingTopics: state.news.trendingTopics};
+  const {trendingTopics, selectedCategory} = useSelector(state => {
+    return {
+      trendingTopics: state.news.trendingTopics,
+      selectedCategory: state.news.selectedCategory,
+    };
   });
   const dispatch = useDispatch();
-  console.log('trending topics props in menu', trendingTopics);
   useEffect(() => {
     dispatch(fetchTrendingTopics());
   }, []);
 
-  // console.log('menu props', props);
-  // console.log(TrendingTopics);
   return (
     <View style={{flex: 1, padding: 12, backgroundColor: colors.WHITE}}>
       <View style={styles.headerView}>
@@ -72,6 +73,13 @@ const home = props => {
               return (
                 <TouchableOpacity
                   onPress={() => {
+                    dispatch(setSelectedCategory(item.category));
+                    dispatch(clearStories());
+                    dispatch(
+                      fetchStories({
+                        selectedCategory: item.category,
+                      }),
+                    );
                     props.navigation.navigate('Feed', item);
                   }}
                   style={{
@@ -108,46 +116,7 @@ const home = props => {
             {'SUGGESTED TOPICS'}
           </Text>
 
-          {/* <SuggestedTopicsComponent props={suggestedTopics} /> */}
-
-          <View style={[styles.row, {flexWrap: 'wrap', marginVertical: 8}]}>
-            {
-              // !!suggestedTopics &&
-
-              trendingTopics?.map((item, index) => {
-                return (
-                  <TouchableOpacity
-                    style={{
-                      padding: 2,
-                      marginTop: 4,
-                      borderRadius: 8,
-                    }}
-                    onPress={() => {
-                      props.navigation.navigate('Feed', item);
-                    }}>
-                    <ImageBackground
-                      source={{uri: item.image_url}}
-                      style={{
-                        height: Height / 6,
-                        width: Width / 3.4,
-                      }}
-                      imageStyle={{
-                        borderRadius: 4,
-                      }}>
-                      <LinearGradient
-                        colors={['#00000000', '#00000000', '#FFFFFF']}
-                        style={styles.linearGradient}>
-                        <Text style={styles.buttonText}>{item.label}</Text>
-                      </LinearGradient>
-                      {/* <Text>{item.tag}</Text> */}
-                    </ImageBackground>
-                  </TouchableOpacity>
-                );
-              })
-            }
-
-            <Text style={{color: colors.BLACK}}>{'Suggested topics icon'}</Text>
-          </View>
+          <SuggestedTopicsComponent props={trendingTopics} />
         </View>
       </ScrollView>
     </View>

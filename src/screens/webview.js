@@ -21,8 +21,6 @@ const home = props => {
   //   dispatch(fetchSuggestedTopics());
   // }, []);
 
-  console.log('webView props', props);
-
   return <WebView source={{uri: props.route.params}} />;
 };
 

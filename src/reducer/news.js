@@ -1,15 +1,18 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
 import apiclient from '../apiclient';
 
 export const fetchStories = createAsyncThunk(
   'fetchStories',
-  async (userId, thunkAPI) => {
-    console.log('userID', userId);
-    const storiesResponse = await apiclient.get(
-      `news?category=${userId}&max_limit=10&include_card_data=true`,
-    );
-    console.log('storiesResponse', storiesResponse);
+  async ({selectedCategory, news_offset, reset}) => {
+    const storiesResponse = await apiclient.get(`news`, {
+      params: {
+        category: selectedCategory,
+        news_offset: news_offset,
+        max_limit: 10,
+        include_card_data: true,
+      },
+    });
     return storiesResponse.data;
   },
 );
@@ -20,7 +23,6 @@ export const fetchTrendingTopics = createAsyncThunk(
     const trendingTopicsResponse = await apiclient.get(
       'search/trending_topics',
     );
-    console.log('trendingTopicsResponse', trendingTopicsResponse);
     return trendingTopicsResponse.data;
   },
 );
@@ -30,38 +32,42 @@ export const fetchTrendingTopicsFeed = createAsyncThunk(
     const trendingTopicsFeedResponse = await apiclient.get(
       'search/trending_topics/T20_World_Cup?page=1&type=CUSTOM_CATEGORY',
     );
-    console.log('trendingTopicsFeedResponse,', trendingTopicsFeedResponse);
     return trendingTopicsFeedResponse;
   },
 );
 
 const initialState = {
-  // trendingTopics: [],
-  stories: null,
+  selectedCategory: 'top_stories',
+  stories: [],
   trendingTopics: null,
   trendingTopicsFeed: null,
-  // showAuthorName: false,
 };
 
 export const newsslice = createSlice({
   name: 'news',
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedCategory: (state, action) => {
+      state.selectedCategory = action.payload;
+    },
+    clearStories: state => {
+      state.stories = [];
+    },
+  },
   extraReducers: builder => {
     builder.addCase(fetchStories.fulfilled, (state, action) => {
-      console.log(' category topics action', action);
-      state.stories = action.payload.news_list;
+      state.stories = [...state.stories, ...action.payload.news_list];
     });
 
     builder.addCase(fetchTrendingTopics.fulfilled, (state, action) => {
-      console.log(action);
       state.trendingTopics = action.payload.trending_tags;
     });
     builder.addCase(fetchTrendingTopicsFeed.fulfilled, (state, action) => {
-      console.log(action);
       state.trendingTopicsFeed = action.payload.data.news_list;
     });
   },
 });
+
+export const {setSelectedCategory, clearStories} = newsslice.actions;
 
 export default newsslice.reducer;
