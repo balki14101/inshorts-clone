@@ -38,6 +38,7 @@ export const fetchTrendingTopicsFeed = createAsyncThunk(
 
 const initialState = {
   selectedCategory: 'top_stories',
+  showAuthorName: false,
   stories: [],
   trendingTopics: null,
   trendingTopicsFeed: null,
@@ -52,6 +53,9 @@ export const newsslice = createSlice({
     },
     clearStories: state => {
       state.stories = [];
+    },
+    setShowAuthorName: state => {
+      state.showAuthorName = !state.showAuthorName;
     },
   },
   extraReducers: builder => {
@@ -68,6 +72,7 @@ export const newsslice = createSlice({
   },
 });
 
-export const {setSelectedCategory, clearStories} = newsslice.actions;
+export const {setSelectedCategory, clearStories, setShowAuthorName} =
+  newsslice.actions;
 
 export default newsslice.reducer;

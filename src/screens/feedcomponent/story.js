@@ -17,13 +17,24 @@ import {
   FONT_SIZE_NORMAL,
   FONT_SIZE_LARGE,
 } from '../../constants/fontsize';
+import {useSelector, useDispatch} from 'react-redux';
+
+import {setShowAuthorName} from '../../reducer/news';
 
 const story = props => {
-  const [showAuthorName, setshowAuthorName] = useState(false);
+  // const [showAuthorName, setshowAuthorName] = useState(false);
 
   const navigaion = useNavigation();
 
   const {data, index} = props;
+
+  const {showAuthorName} = useSelector(state => {
+    return {
+      showAuthorName: state.news.showAuthorName,
+    };
+  });
+
+  const dispatch = useDispatch();
 
   return (
     <View
@@ -48,7 +59,18 @@ const story = props => {
             <Text
               onPress={() => {
                 navigaion.navigate('WebView', data.source_url);
-                setshowAuthorName(!showAuthorName);
+                // setshowAuthorName(!showAuthorName);
+                dispatch(setShowAuthorName());
+              }}
+              style={styles.authorNameText}>
+              {`shot by ${data.author_name}`}
+            </Text>
+          ) : (
+            <Text
+              onPress={() => {
+                navigaion.navigate('WebView', data.source_url);
+                // setshowAuthorName(!showAuthorName);
+                dispatch(setShowAuthorName());
               }}
               style={styles.sourceNameText}>
               {`tap for more at `}
@@ -60,15 +82,6 @@ const story = props => {
                 {data.source_name}
               </Text>
               {' / today'}
-            </Text>
-          ) : (
-            <Text
-              onPress={() => {
-                navigaion.navigate('WebView', data.source_url);
-                setshowAuthorName(!showAuthorName);
-              }}
-              style={styles.authorNameText}>
-              {`shot by ${data.author_name}`}
             </Text>
           )}
         </View>
