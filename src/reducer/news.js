@@ -28,11 +28,13 @@ export const fetchTrendingTopics = createAsyncThunk(
 );
 export const fetchTrendingTopicsFeed = createAsyncThunk(
   'fetchTrendingTopicsFeed',
-  async (userId, thunkAPI) => {
+  async topic => {
+    console.log(topic);
     const trendingTopicsFeedResponse = await apiclient.get(
-      'search/trending_topics/T20_World_Cup?page=1&type=CUSTOM_CATEGORY',
+      `search/trending_topics/${topic}?page=1&type=CUSTOM_CATEGORY`,
     );
-    return trendingTopicsFeedResponse;
+    // console.log('trendingTopicsFeedResponse', trendingTopicsFeedResponse);
+    return trendingTopicsFeedResponse.data;
   },
 );
 
@@ -41,7 +43,7 @@ const initialState = {
   showAuthorName: false,
   stories: [],
   trendingTopics: null,
-  trendingTopicsFeed: null,
+  trendingTopicsFeed: [],
 };
 
 export const newsslice = createSlice({
@@ -67,7 +69,7 @@ export const newsslice = createSlice({
       state.trendingTopics = action.payload.trending_tags;
     });
     builder.addCase(fetchTrendingTopicsFeed.fulfilled, (state, action) => {
-      state.trendingTopicsFeed = action.payload.data.news_list;
+      state.trendingTopicsFeed = action.payload.news_list;
     });
   },
 });

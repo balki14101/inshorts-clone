@@ -17,11 +17,17 @@ import colors from '../../constants/colors';
 import {Height, Width} from '../../constants/dimension';
 import {FONT_SIZE_SMALL} from '../../constants/fontsize';
 
+import {useDispatch} from 'react-redux';
+
+import {fetchTrendingTopicsFeed} from '../../reducer/news';
+
 const suggestedtopics = props => {
   const navigation = useNavigation();
   const suggestedtopic = [];
   suggestedtopic.push(props.props);
   const topics = suggestedtopic[0];
+
+  const dispatch = useDispatch();
 
   return (
     <View style={[styles.row, {flexWrap: 'wrap', marginVertical: 8}]}>
@@ -37,7 +43,11 @@ const suggestedtopics = props => {
                 borderRadius: 8,
               }}
               onPress={() => {
-                navigation.navigate('Feed', item);
+                navigation.navigate('Feed', {
+                  screen: 'trendingtopicsfeed',
+                  params: item.tag,
+                });
+                dispatch(fetchTrendingTopicsFeed(item.tag));
               }}>
               <ImageBackground
                 source={{uri: item.image_url}}
