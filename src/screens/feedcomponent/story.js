@@ -100,7 +100,7 @@ const story = props => {
   );
 };
 
-export default React.memo(story);
+export default story;
 
 const styles = StyleSheet.create({
   container: {

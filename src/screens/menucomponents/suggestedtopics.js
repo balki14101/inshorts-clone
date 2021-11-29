@@ -19,7 +19,10 @@ import {FONT_SIZE_SMALL} from '../../constants/fontsize';
 
 import {useDispatch} from 'react-redux';
 
-import {fetchTrendingTopicsFeed} from '../../reducer/news';
+import {
+  clearTrendingTopicFeed,
+  fetchTrendingTopicsFeed,
+} from '../../reducer/news';
 
 const suggestedtopics = props => {
   const navigation = useNavigation();
@@ -47,6 +50,7 @@ const suggestedtopics = props => {
                   screen: 'trendingtopicsfeed',
                   params: item.tag,
                 });
+                dispatch(clearTrendingTopicFeed());
                 dispatch(fetchTrendingTopicsFeed(item.tag));
               }}>
               <ImageBackground

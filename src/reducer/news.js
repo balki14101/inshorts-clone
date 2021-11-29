@@ -56,6 +56,9 @@ export const newsslice = createSlice({
     clearStories: state => {
       state.stories = [];
     },
+    clearTrendingTopicFeed: state => {
+      state.trendingTopicsFeed = [];
+    },
     setShowAuthorName: state => {
       state.showAuthorName = !state.showAuthorName;
     },
@@ -74,7 +77,11 @@ export const newsslice = createSlice({
   },
 });
 
-export const {setSelectedCategory, clearStories, setShowAuthorName} =
-  newsslice.actions;
+export const {
+  setSelectedCategory,
+  clearStories,
+  setShowAuthorName,
+  clearTrendingTopicFeed,
+} = newsslice.actions;
 
 export default newsslice.reducer;
