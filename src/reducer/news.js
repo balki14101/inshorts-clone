@@ -28,18 +28,17 @@ export const fetchTrendingTopics = createAsyncThunk(
 );
 export const fetchTrendingTopicsFeed = createAsyncThunk(
   'fetchTrendingTopicsFeed',
-  async ({topic, pagenumber}) => {
-    console.log(topic);
+  async ({topic, pageNumber}) => {
+    console.log(topic, pageNumber);
     const trendingTopicsFeedResponse = await apiclient.get(
       `search/trending_topics/${topic}`,
       {
         params: {
-          page: 1,
+          page: pageNumber,
           type: 'CUSTOM_CATEGORY',
         },
       },
     );
-    // console.log('trendingTopicsFeedResponse', trendingTopicsFeedResponse);
     return trendingTopicsFeedResponse.data;
   },
 );
@@ -47,9 +46,11 @@ export const fetchTrendingTopicsFeed = createAsyncThunk(
 const initialState = {
   selectedCategory: 'top_stories',
   showAuthorName: false,
+  showImage: false,
   stories: [],
   trendingTopics: null,
   trendingTopicsFeed: [],
+  pageNumber: 1,
 };
 
 export const newsslice = createSlice({
@@ -65,8 +66,14 @@ export const newsslice = createSlice({
     clearTrendingTopicFeed: state => {
       state.trendingTopicsFeed = [];
     },
+    setShowImage: state => {
+      state.showImage = !state.showImage;
+    },
     setShowAuthorName: state => {
       state.showAuthorName = !state.showAuthorName;
+    },
+    resetPageNumber: state => {
+      state.pageNumber = 1;
     },
   },
   extraReducers: builder => {
@@ -85,6 +92,7 @@ export const newsslice = createSlice({
         ...state.trendingTopicsFeed,
         ...action.payload.news_list,
       ];
+      state.pageNumber = state.pageNumber + 1;
     });
   },
 });
@@ -92,8 +100,10 @@ export const newsslice = createSlice({
 export const {
   setSelectedCategory,
   clearStories,
+  setShowImage,
   setShowAuthorName,
   clearTrendingTopicFeed,
+  resetPageNumber,
 } = newsslice.actions;
 
 export default newsslice.reducer;

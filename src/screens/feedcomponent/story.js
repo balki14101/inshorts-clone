@@ -5,7 +5,8 @@ import {
   Image,
   StyleSheet,
   ImageBackground,
-  Dimensions,
+  TouchableOpacity,
+  Modal,
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
@@ -16,37 +17,54 @@ import {
   FONT_SIZE_SMALL,
   FONT_SIZE_NORMAL,
   FONT_SIZE_LARGE,
+  FONT_SIZE_MEDIUM,
 } from '../../constants/fontsize';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {setShowAuthorName} from '../../reducer/news';
+import {setShowImage, setShowAuthorName} from '../../reducer/news';
 
 const story = props => {
   // const [showAuthorName, setshowAuthorName] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const navigaion = useNavigation();
 
   const {data, index} = props;
 
-  const {showAuthorName} = useSelector(state => {
+  const {showImage, showAuthorName} = useSelector(state => {
     return {
+      showImage: state.news.showImage,
       showAuthorName: state.news.showAuthorName,
     };
   });
 
   const dispatch = useDispatch();
 
+  console.log('image show', showImage);
+
   return (
-    <View
-      style={
-        styles.container
-        // index % 2 == 0 ? { backgroundColor: 'green' } : null,
-        // {backgroundColor: index % 2 == 0 ? 'green' : 'red'},
-      }>
-      <Image
-        source={{uri: data.image_url}}
-        style={{height: Height / 3, width: Width}}
-      />
+    <View style={styles.container}>
+      <Modal
+        animationType="none"
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <Image
+            source={{uri: data.image_url}}
+            style={{height: Height, width: Width}}
+            resizeMode="contain"
+          />
+        </View>
+      </Modal>
+
+      <TouchableOpacity onPress={() => setModalVisible(true)} activeOpacity={1}>
+        <Image
+          source={{uri: data.image_url}}
+          style={{height: Height / 3, width: Width}}
+        />
+      </TouchableOpacity>
       <View
         style={{
           flex: 1,
@@ -85,16 +103,21 @@ const story = props => {
             </Text>
           )}
         </View>
-
-        <ImageBackground
-          source={{uri: data.image_url}}
-          style={{width: Width, height: Height / 14}}
-          blurRadius={16}>
-          <View style={styles.bottomView}>
-            <Text style={styles.bottomHeadline}>{data.bottom_headline}</Text>
-            <Text style={styles.bottomText}>{data.bottom_text}</Text>
-          </View>
-        </ImageBackground>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => {
+            navigaion.navigate('WebView', data.source_url);
+          }}>
+          <ImageBackground
+            source={{uri: data.image_url}}
+            style={{width: Width, height: Height / 14}}
+            blurRadius={16}>
+            <View style={styles.bottomView}>
+              <Text style={styles.bottomHeadline}>{data.bottom_headline}</Text>
+              <Text style={styles.bottomText}>{data.bottom_text}</Text>
+            </View>
+          </ImageBackground>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -112,9 +135,8 @@ const styles = StyleSheet.create({
   },
   titleText: {color: colors.BLACK, fontSize: FONT_SIZE_LARGE},
   descriptionText: {
-    // color: '#909090',
     color: colors.GREY,
-    fontSize: FONT_SIZE_LARGE,
+    fontSize: FONT_SIZE_MEDIUM,
     fontWeight: '300',
     marginTop: 8,
     lineHeight: 26,
@@ -146,4 +168,48 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bottomText: {color: colors.WHITE, fontSize: FONT_SIZE_SMALL},
+  /////////////////////////////////////////
+
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.BLACK,
+    // marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
 });

@@ -5,9 +5,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Provider} from 'react-redux';
 import store from './src/store';
 
+import splashscreen from './src/screens/splashscreen';
 import hometabnavigator from './src/screens/hometabnavigator';
-
-import Menu from './src/screens/menu';
+import WebView from './src/screens/webview';
 
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
@@ -21,11 +21,21 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
+            name="splashscreen"
+            component={splashscreen}
+            options={{headerShown: false}}
+          />
+
+          <Stack.Screen
             name="home"
             component={hometabnavigator}
             options={{headerShown: false}}
           />
-          {/* <Stack.Screen name="home" component={Menu} /> */}
+          <Stack.Screen
+            name="WebView"
+            component={WebView}
+            options={{title: ''}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

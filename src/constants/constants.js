@@ -17,7 +17,7 @@ const categories = [
   {
     title: 'BOOKMARKS',
     icon: 'bookmark',
-    category: 'top_stories',
+    category: '',
   },
 ];
 

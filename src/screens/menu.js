@@ -4,38 +4,27 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Image,
-  ImageBackground,
   TouchableOpacity,
 } from 'react-native';
-import {State} from 'react-native-gesture-handler';
-
-import {connect} from 'react-redux';
 
 import {useSelector, useDispatch} from 'react-redux';
 
-import {fetchTrendingTopics, setSelectedCategory} from '../reducer/news';
-
-import LinearGradient from 'react-native-linear-gradient';
+import {
+  fetchTrendingTopics,
+  setSelectedCategory,
+  fetchStories,
+  clearStories,
+} from '../reducer/news';
 
 import SettingsIcon from 'react-native-vector-icons/SimpleLineIcons';
 import Arrow from 'react-native-vector-icons/MaterialIcons';
 import CategoriesIcon from 'react-native-vector-icons/Entypo';
 
 import colors from '../constants/colors';
-import {
-  FONT_SIZE_MEDIUM,
-  FONT_SIZE_NORMAL,
-  FONT_SIZE_SMALL,
-} from '../constants/fontsize';
+import {FONT_SIZE_MEDIUM, FONT_SIZE_SMALL} from '../constants/fontsize';
 import categories from '../constants/constants';
 
-import {fetchStories, clearStories} from '../reducer/news';
-
-import {Height, Width} from '../constants/dimension';
-
 import SuggestedTopicsComponent from './menucomponents/suggestedtopics';
-import suggestedtopics from './menucomponents/suggestedtopics';
 
 const home = props => {
   const {trendingTopics, selectedCategory} = useSelector(state => {
@@ -52,7 +41,7 @@ const home = props => {
   return (
     <View style={{flex: 1, padding: 12, backgroundColor: colors.WHITE}}>
       <View style={styles.headerView}>
-        <Text style={{color: '#808080', fontSize: 16}}>
+        <Text style={{color: colors.BLACK_VARIENT1, fontSize: 16}}>
           {'Categories and Topics'}
         </Text>
         <View style={styles.row}>
@@ -72,6 +61,7 @@ const home = props => {
             {categories.map((item, index) => {
               return (
                 <TouchableOpacity
+                  key={String(index)}
                   onPress={() => {
                     dispatch(setSelectedCategory(item.category));
                     dispatch(clearStories());
@@ -103,7 +93,6 @@ const home = props => {
                 </TouchableOpacity>
               );
             })}
-            {/* </View> */}
           </ScrollView>
         </View>
         <View style={{}}>
@@ -129,22 +118,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   headerView: {
-    // backgroundColor: 'red',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   linearGradient: {
     flex: 1,
-    // backgroundColor: 'red',
     justifyContent: 'flex-end',
     borderRadius: 4,
     borderColor: colors.LIGHT_BLUE,
     borderWidth: 1,
     borderBottomWidth: 2,
-
-    // paddingLeft: 15,
-    // paddingRight: 15,
-    // borderRadius: 5,
   },
   buttonText: {
     fontSize: FONT_SIZE_SMALL,

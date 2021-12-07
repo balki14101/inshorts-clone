@@ -21,7 +21,6 @@ const Feed = () => {
         component={trendingtopicsfeed}
         options={{headerShown: false}}
       />
-      {/* <Stack.Screen name="home" component={Menu} /> */}
     </Stack.Navigator>
   );
 };
