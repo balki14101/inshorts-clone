@@ -38,6 +38,8 @@ const suggestedtopics = props => {
         // !!suggestedTopics &&
 
         topics?.map((item, index) => {
+          const topic = item.tag;
+          const pagenumber = 1;
           return (
             <TouchableOpacity
               style={{
@@ -51,7 +53,7 @@ const suggestedtopics = props => {
                   params: item.tag,
                 });
                 dispatch(clearTrendingTopicFeed());
-                dispatch(fetchTrendingTopicsFeed(item.tag));
+                dispatch(fetchTrendingTopicsFeed({topic}));
               }}>
               <ImageBackground
                 source={{uri: item.image_url}}

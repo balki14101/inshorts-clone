@@ -26,7 +26,7 @@ const trendingtopicsfeed = props => {
 
   const onEndReached = () => {
     alert('this is the end');
-    dispatch(fetchTrendingTopicsFeed(topic, 2));
+    dispatch(fetchTrendingTopicsFeed({topic}));
   };
 
   const renderTrendingTopicItem = item => {
