@@ -32,7 +32,6 @@ import {
   fetchStories,
   setSelectedCategory,
   fetchSuggestedTopics,
-  fetchTrendingTopicsFeed,
   setShowAuthorName,
 } from '../reducer/news';
 

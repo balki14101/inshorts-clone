@@ -28,10 +28,10 @@ export const fetchTrendingTopics = createAsyncThunk(
 );
 export const fetchTrendingTopicsFeed = createAsyncThunk(
   'fetchTrendingTopicsFeed',
-  async topic => {
+  async (topic, pagenumber) => {
     console.log(topic);
     const trendingTopicsFeedResponse = await apiclient.get(
-      `search/trending_topics/${topic}?page=1&type=CUSTOM_CATEGORY`,
+      `search/trending_topics/${topic}?page=${pagenumber}&type=CUSTOM_CATEGORY`,
     );
     // console.log('trendingTopicsFeedResponse', trendingTopicsFeedResponse);
     return trendingTopicsFeedResponse.data;
@@ -69,7 +69,10 @@ export const newsslice = createSlice({
     });
 
     builder.addCase(fetchTrendingTopics.fulfilled, (state, action) => {
-      state.trendingTopics = action.payload.trending_tags;
+      state.trendingTopics = [
+        ...state.trendingTopicsFeed,
+        ...action.payload.trending_tags,
+      ];
     });
     builder.addCase(fetchTrendingTopicsFeed.fulfilled, (state, action) => {
       state.trendingTopicsFeed = action.payload.news_list;
