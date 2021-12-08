@@ -14,11 +14,12 @@ Download and try this APK from [here](https://github.com/balki14101/inshorts-clo
 
 ## Preview
 
-<img src="https://github.com/balki14101/inshorts-clone/blob/master/src/assets/1.jpg" width=300 >
-<img src="https://github.com/balki14101/inshorts-clone/blob/master/src/assets/2.jpg" width=300 >
+
+<img src="https://github.com/balki14101/inshorts-clone/blob/master/src/assets/fast_forwarded.gif" width=300 >
+<!-- <img src="https://github.com/balki14101/inshorts-clone/blob/master/src/assets/2.jpg" width=300 >
 <img src="https://github.com/balki14101/inshorts-clone/blob/master/src/assets/3.jpg" width=300 >
 <img src="https://github.com/balki14101/inshorts-clone/blob/master/src/assets/4.jpg" width=300 >
-<img src="https://github.com/balki14101/inshorts-clone/blob/master/src/assets/5.jpg" width=300 >
+<img src="https://github.com/balki14101/inshorts-clone/blob/master/src/assets/5.jpg" width=300 > -->
 
 
 ## Contributing
