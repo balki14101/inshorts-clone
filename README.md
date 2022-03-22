@@ -1,7 +1,7 @@
 # Inshorts Clone
 
 Inshorts Clone App is created using React Native for both Android and iOS.<br />
-*This apk consists of lastest summarized news articles in 60 words and covers a wide-range of topics.<br/>
+*This apk consists of latest summarized news articles in 60 words and covers a wide-range of topics.<br/>
 *APIs of official Inshorts app is integrated.<br />
 *Redux is used for State Management. <br />
 *Axios is used for API requests. <br />
